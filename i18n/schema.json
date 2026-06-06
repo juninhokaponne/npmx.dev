@@ -4372,12 +4372,6 @@
         "lines_hidden": {
           "type": "string"
         },
-        "file_too_large": {
-          "type": "string"
-        },
-        "file_size_warning": {
-          "type": "string"
-        },
         "compare_versions": {
           "type": "string"
         },
@@ -4496,6 +4490,15 @@
           "type": "string"
         },
         "diff_distance": {
+          "type": "string"
+        },
+        "diff_truncated": {
+          "type": "string"
+        },
+        "large_diff_mode": {
+          "type": "string"
+        },
+        "large_diff_options_disabled": {
           "type": "string"
         },
         "loading_diff": {
