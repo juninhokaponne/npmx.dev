@@ -53,8 +53,7 @@ export function useInstallCommand(
   const typesInstallCommandParts = computed(() => {
     const types = toValue(typesPackageName)
     if (!types) return []
-    const pm = packageManagers.find(p => p.id === selectedPM.value)
-    if (!pm) return []
+    const pm = getPackageManagerConfig(selectedPM.value)
 
     const pkgSpec = selectedPM.value === 'deno' ? `npm:${types}` : types
 
@@ -69,8 +68,7 @@ export function useInstallCommand(
       return installCommand.value
     }
 
-    const pm = packageManagers.find(p => p.id === selectedPM.value)
-    if (!pm) return installCommand.value
+    const pm = getPackageManagerConfig(selectedPM.value)
 
     const pkgSpec = selectedPM.value === 'deno' ? `npm:${types}` : types
 
