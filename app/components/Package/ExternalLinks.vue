@@ -8,7 +8,15 @@ const props = defineProps<{
 
 const displayVersion = computed(() => props.pkg?.requestedVersion ?? null)
 const { repositoryUrl } = useRepositoryUrl(displayVersion)
-const { meta: repoMeta, repoRef, stars, starsLink, forks, forksLink } = useRepoMeta(repositoryUrl)
+const {
+  meta: repoMeta,
+  repoRef,
+  stars,
+  starsLink,
+  forks,
+  forksLink,
+  repoLink,
+} = useRepoMeta(repositoryUrl)
 const compactNumberFormatter = useCompactNumberFormatter()
 
 const homepageUrl = computed(() => {
@@ -143,8 +151,8 @@ useCommandPaletteContextCommands(
         <span v-else>{{ $t('package.links.repo') }}</span>
       </LinkBase>
     </li>
-    <li v-if="repositoryUrl && repoMeta && starsLink">
-      <LinkBase :to="starsLink" classicon="i-lucide:star">
+    <li v-if="repositoryUrl && repoMeta && repoLink">
+      <LinkBase :to="repoLink" classicon="i-lucide:star">
         {{ compactNumberFormatter.format(stars) }}
       </LinkBase>
     </li>
