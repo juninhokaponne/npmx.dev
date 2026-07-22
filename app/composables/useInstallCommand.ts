@@ -1,4 +1,5 @@
 import type { JsrPackageInfo } from '#shared/types/jsr'
+import { getPackageManagerConfig } from '~/utils/install-command'
 
 /**
  * Composable for generating install commands with support for
@@ -53,11 +54,11 @@ export function useInstallCommand(
   const typesInstallCommandParts = computed(() => {
     const types = toValue(typesPackageName)
     if (!types) return []
-    const pm = getPackageManagerConfig(selectedPM.value)
+    const packageManagerConfig = getPackageManagerConfig(selectedPM.value)
 
     const pkgSpec = selectedPM.value === 'deno' ? `npm:${types}` : types
 
-    return [pm.label, pm.action, devFlag.value, pkgSpec]
+    return [packageManagerConfig.label, packageManagerConfig.action, devFlag.value, pkgSpec]
   })
 
   // Full install command including @types (for copying)
@@ -68,12 +69,12 @@ export function useInstallCommand(
       return installCommand.value
     }
 
-    const pm = getPackageManagerConfig(selectedPM.value)
+    const packageManagerConfig = getPackageManagerConfig(selectedPM.value)
 
     const pkgSpec = selectedPM.value === 'deno' ? `npm:${types}` : types
 
     // Use semicolon to separate commands
-    return `${installCommand.value}; ${pm.label} ${pm.action} ${devFlag.value} ${pkgSpec}`
+    return `${installCommand.value}; ${packageManagerConfig.label} ${packageManagerConfig.action} ${devFlag.value} ${pkgSpec}`
   })
 
   // Copy state

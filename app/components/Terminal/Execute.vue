@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { JsrPackageInfo } from '#shared/types/jsr'
 import type { PackageManagerId } from '~/utils/install-command'
+import { getPackageManagerConfig } from '~/utils/install-command'
 
 /**
  * A terminal-style execute command display for binary-only packages.
@@ -14,7 +15,7 @@ const props = defineProps<{
 }>()
 
 const selectedPM = useSelectedPackageManager()
-const selectedPackageManager = computed(() => getPackageManagerConfig(selectedPM.value))
+const selectedPackageManagerConfig = computed(() => getPackageManagerConfig(selectedPM.value))
 
 // Generate execute command parts for a specific package manager
 function getExecutePartsForPM(pmId: PackageManagerId) {
@@ -54,13 +55,13 @@ const copyExecuteCommand = () => copyExecute(getFullExecuteCommand())
       </div>
       <div class="px-3 pt-2 pb-3 sm:px-4 sm:pt-3 sm:pb-4 space-y-1">
         <div
-          :data-pm-cmd="selectedPackageManager.id"
+          :data-pm-cmd="selectedPackageManagerConfig.id"
           class="flex items-center gap-2 group/executecmd"
         >
           <span class="text-fg-subtle font-mono text-sm select-none">$</span>
           <code class="font-mono text-sm"
             ><span
-              v-for="(part, i) in getExecutePartsForPM(selectedPackageManager.id)"
+              v-for="(part, i) in getExecutePartsForPM(selectedPackageManagerConfig.id)"
               :key="i"
               :class="i === 0 ? 'text-fg' : 'text-fg-muted'"
               >{{ i > 0 ? ' ' : '' }}{{ part }}</span
