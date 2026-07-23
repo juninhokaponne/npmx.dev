@@ -8,15 +8,7 @@ const props = defineProps<{
 
 const displayVersion = computed(() => props.pkg?.requestedVersion ?? null)
 const { repositoryUrl } = useRepositoryUrl(displayVersion)
-const {
-  meta: repoMeta,
-  repoRef,
-  stars,
-  starsLink,
-  forks,
-  forksLink,
-  repoLink,
-} = useRepoMeta(repositoryUrl)
+const { meta: repoMeta, repoRef, stars, forks, forksLink, repoLink } = useRepoMeta(repositoryUrl)
 const compactNumberFormatter = useCompactNumberFormatter()
 
 const homepageUrl = computed(() => {
@@ -63,14 +55,14 @@ useCommandPaletteContextCommands(
       })
     }
 
-    if (repositoryUrl.value && starsLink.value) {
+    if (repositoryUrl.value && repoLink.value) {
       commands.push({
         id: 'package-link-stars',
         group: 'links',
         label: $t('command_palette.package_links.stars'),
         keywords: [...packageKeywords, $t('command_palette.package_links.stars')],
         iconClass: 'i-lucide:star',
-        href: starsLink.value,
+        href: repoLink.value,
       })
     }
 
