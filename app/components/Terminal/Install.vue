@@ -3,6 +3,7 @@ import type { JsrPackageInfo } from '#shared/types/jsr'
 import type { DevDependencySuggestion } from '#shared/utils/dev-dependency'
 import type { PackageManagerId } from '~/utils/install-command'
 import type { CommandPaletteContextCommandInput } from '~/types/command-palette'
+import { getPackageManagerConfig } from '~/utils/install-command'
 
 const props = defineProps<{
   packageName: string
@@ -111,7 +112,7 @@ const { copied: createCopied, copy: copyCreate } = useClipboard({ copiedDuring: 
 const copyCreateCommand = () => copyCreate(getFullCreateCommand())
 
 const { copied: devInstallCopied, copy: copyDevInstall } = useClipboard({ copiedDuring: 2000 })
-const selectedPackageManager = computed(() => getPackageManagerConfig(selectedPM.value))
+const selectedPackageManagerConfig = computed(() => getPackageManagerConfig(selectedPM.value))
 const copyDevInstallCommand = () =>
   copyDevInstall(
     getInstallCommand({
@@ -221,13 +222,13 @@ useCommandPaletteContextCommands(
       </div>
       <div class="px-3 pt-2 pb-3 sm:px-4 sm:pt-3 sm:pb-4 space-y-1 overflow-x-auto" dir="ltr">
         <div
-          :data-pm-cmd="selectedPackageManager.id"
+          :data-pm-cmd="selectedPackageManagerConfig.id"
           class="flex items-center gap-2 group/installcmd min-w-0"
         >
           <span class="self-start text-fg-subtle font-mono text-sm select-none shrink-0">$</span>
           <code class="font-mono text-sm min-w-0"
             ><span
-              v-for="(part, i) in getInstallPartsForPM(selectedPackageManager.id)"
+              v-for="(part, i) in getInstallPartsForPM(selectedPackageManagerConfig.id)"
               :key="i"
               :class="i === 0 ? 'text-fg' : 'text-fg-muted'"
               >{{ i > 0 ? ' ' : '' }}{{ part }}</span
@@ -251,13 +252,13 @@ useCommandPaletteContextCommands(
             >
           </div>
           <div
-            :data-pm-cmd="selectedPackageManager.id"
+            :data-pm-cmd="selectedPackageManagerConfig.id"
             class="flex items-center gap-2 group/devinstallcmd min-w-0"
           >
             <span class="text-fg-subtle font-mono text-sm select-none shrink-0">$</span>
             <code class="font-mono text-sm min-w-0"
               ><span
-                v-for="(part, i) in getDevInstallPartsForPM(selectedPackageManager.id)"
+                v-for="(part, i) in getDevInstallPartsForPM(selectedPackageManagerConfig.id)"
                 :key="i"
                 :class="i === 0 ? 'text-fg' : 'text-fg-muted'"
                 >{{ i > 0 ? ' ' : '' }}{{ part }}</span
@@ -279,11 +280,14 @@ useCommandPaletteContextCommands(
 
         <!-- @types package install - render all PM variants when types package exists -->
         <template v-if="typesPackageName && showTypesInInstall">
-          <div :data-pm-cmd="selectedPackageManager.id" class="flex items-center gap-2 min-w-0">
+          <div
+            :data-pm-cmd="selectedPackageManagerConfig.id"
+            class="flex items-center gap-2 min-w-0"
+          >
             <span class="self-start text-fg-subtle font-mono text-sm select-none shrink-0">$</span>
             <code class="font-mono text-sm min-w-0"
               ><span
-                v-for="(part, i) in getTypesInstallPartsForPM(selectedPackageManager.id)"
+                v-for="(part, i) in getTypesInstallPartsForPM(selectedPackageManagerConfig.id)"
                 :key="i"
                 :class="i === 0 ? 'text-fg' : 'text-fg-muted'"
                 >{{ i > 0 ? ' ' : '' }}{{ part }}</span
@@ -310,14 +314,14 @@ useCommandPaletteContextCommands(
           </div>
 
           <div
-            :data-pm-cmd="selectedPackageManager.id"
+            :data-pm-cmd="selectedPackageManagerConfig.id"
             class="flex items-center gap-2 group/runcmd"
           >
             <span class="self-start text-fg-subtle font-mono text-sm select-none">$</span>
             <code class="font-mono text-sm"
               ><span
                 v-for="(part, i) in getRunPartsForPM(
-                  selectedPackageManager.id,
+                  selectedPackageManagerConfig.id,
                   executableInfo?.primaryCommand,
                 )"
                 :key="i"
@@ -356,13 +360,13 @@ useCommandPaletteContextCommands(
           </div>
 
           <div
-            :data-pm-cmd="selectedPackageManager.id"
+            :data-pm-cmd="selectedPackageManagerConfig.id"
             class="flex items-center gap-2 group/createcmd"
           >
             <span class="self-start text-fg-subtle font-mono text-sm select-none">$</span>
             <code class="font-mono text-sm"
               ><span
-                v-for="(part, i) in getCreatePartsForPM(selectedPackageManager.id)"
+                v-for="(part, i) in getCreatePartsForPM(selectedPackageManagerConfig.id)"
                 :key="i"
                 :class="i === 0 ? 'text-fg' : 'text-fg-muted'"
                 >{{ i > 0 ? ' ' : '' }}{{ part }}</span
